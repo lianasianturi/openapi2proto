@@ -857,6 +857,31 @@ func (c *compileCtx) compileProperty(name string, prop *openapi.Schema) (string,
 			if c.wrapPrimitives {
 				typ = c.getBoxedType(typ)
 			}
+		case prop.Type.Contains("string"):
+			if len(i.Enum) > 0 {
+				var eName string
+				// breaks on 'Class' :\
+				if !strings.HasSuffix(name, "ss") {
+					eName = strings.TrimSuffix(name, "s")
+				} else {
+					eName = name
+				}
+	
+				eName = strings.Title(eName)
+	
+				if msgName != "" {
+					eName = strings.Title(msgName) + "_" + eName
+				}
+	
+				msgStr := ProtoEnum(eName, i.Enum, depth+1)
+				if depth < 0 {
+					return msgStr
+				}
+				return fmt.Sprintf("%s\n%s%s %s = %d", msgStr, indent(depth+1), eName, name, *index)
+			}
+			if err != nil {
+				return "", nil, index, false, errors.Wrapf(err, `failed to compile array property %s`, name)
+			}	
 		default:
 			if len(prop.Enum) > 0 {
 				p := c.parent()
@@ -905,6 +930,22 @@ func (c *compileCtx) compileProperty(name string, prop *openapi.Schema) (string,
 		c.addType(typ)
 	}
 	return name, typ, index, repeated, nil
+}
+
+func ProtoEnum(name string, enums []string, depth int) string {
+	s := struct {
+		Name  string
+		Enum  []string
+		Depth int
+	}{
+		name, enums, depth,
+	}
+	var b bytes.Buffer
+	err := protoEnumTmpl.Execute(&b, s)
+	if err != nil {
+		log.Fatal("unable to protobuf model: ", err)
+	}
+	return b.String()
 }
 
 func (c *compileCtx) addImportForType(name string) {
