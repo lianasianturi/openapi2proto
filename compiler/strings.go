@@ -206,7 +206,7 @@ func cleanCharacters(input string) string {
 	for _, r := range input {
 		// anything other than a-z, A-Z, 0-9 should be converted
 		// to an underscore
-		if !isAlphaNum(r) {
+		if !isAlphaNum(r) || !(r == '.')  {
 			r = '_'
 		}
 		buf.WriteRune(r)
