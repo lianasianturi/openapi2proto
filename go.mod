@@ -1,4 +1,4 @@
-module github.com/NYTimes/openapi2proto
+module github.com/lianasianturi/openapi2proto
 
 go 1.12
 
