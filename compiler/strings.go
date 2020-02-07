@@ -204,7 +204,7 @@ func normalizeServiceName(s string) string {
 func cleanCharacters(input string) string {
 	var buf bytes.Buffer
 	for _, r := range input {
-		// anything other than a-z, A-Z, 0-9 should be converted
+		// anything other than a-z, A-Z, 0-9 or . should be converted
 		// to an underscore
 		if !isAlphaNum(r) || !(r == '.')  {
 			r = '_'
