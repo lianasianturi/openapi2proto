@@ -1,9 +1,9 @@
 package openapi2proto
 
 import (
-	"github.com/NYTimes/openapi2proto/compiler"
-	"github.com/NYTimes/openapi2proto/internal/option"
-	"github.com/NYTimes/openapi2proto/protobuf"
+	"github.com/lianasianturi/openapi2proto/compiler"
+	"github.com/lianasianturi/openapi2proto/internal/option"
+	"github.com/lianasianturi/openapi2proto/protobuf"
 )
 
 const (

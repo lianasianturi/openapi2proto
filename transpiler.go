@@ -1,11 +1,11 @@
-package openapi2proto // github.com/NYTimes/openapi2proto
+package openapi2proto // github.com/lianasianturi/openapi2proto
 
 import (
 	"io"
 
-	"github.com/NYTimes/openapi2proto/compiler"
-	"github.com/NYTimes/openapi2proto/openapi"
-	"github.com/NYTimes/openapi2proto/protobuf"
+	"github.com/lianasianturi/openapi2proto/compiler"
+	"github.com/lianasianturi/openapi2proto/openapi"
+	"github.com/lianasianturi/openapi2proto/protobuf"
 	"github.com/pkg/errors"
 )
 
