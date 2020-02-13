@@ -10,6 +10,8 @@ import (
 	"github.com/lianasianturi/openapi2proto/openapi"
 	"github.com/lianasianturi/openapi2proto/protobuf"
 	"github.com/pkg/errors"
+
+	"fmt"
 )
 
 var builtinTypes = map[string]protobuf.Type{
@@ -945,21 +947,21 @@ func (c *compileCtx) compileProperty(name string, prop *openapi.Schema) (string,
 	return name, typ, index, repeated, nil
 }
 
-func ProtoEnum(name string, enums []string, depth int) string {
-	s := struct {
-		Name  string
-		Enum  []string
-		Depth int
-	}{
-		name, enums, depth,
-	}
-	var b bytes.Buffer
-	err := protoEnumTmpl.Execute(&b, s)
-	if err != nil {
-		log.Fatal("unable to protobuf model: ", err)
-	}
-	return b.String()
-}
+// func ProtoEnum(name string, enums []string, depth int) string {
+// 	s := struct {
+// 		Name  string
+// 		Enum  []string
+// 		Depth int
+// 	}{
+// 		name, enums, depth,
+// 	}
+// 	var b bytes.Buffer
+// 	err := protoEnumTmpl.Execute(&b, s)
+// 	if err != nil {
+// 		log.Fatal("unable to protobuf model: ", err)
+// 	}
+// 	return b.String()
+// }
 
 func (c *compileCtx) addImportForType(name string) {
 	lib, ok := knownImports[name]
