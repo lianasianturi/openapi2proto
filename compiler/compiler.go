@@ -887,7 +887,7 @@ func (c *compileCtx) compileProperty(name string, prop *openapi.Schema) (string,
 
 		default:
 			if len(prop.Enum) > 0 {
-				fmt.Sprintf(prop.Enum)
+				fmt.Println(prop.Enum)
 
 				// if len(s.Enum) > 0 {
 				// 	name = strings.TrimSuffix(name, "Message")
