@@ -10,8 +10,6 @@ import (
 	"github.com/lianasianturi/openapi2proto/openapi"
 	"github.com/lianasianturi/openapi2proto/protobuf"
 	"github.com/pkg/errors"
-
-	"fmt"
 )
 
 var builtinTypes = map[string]protobuf.Type{
@@ -490,22 +488,36 @@ func (c *compileCtx) getTypeFromReference(ref string) (protobuf.Type, error) {
 	return nil, errors.Errorf(`reference %s could not be resolved`, ref)
 }
 
-func (c *compileCtx) compileEnum(name string, elements []string) (*protobuf.Enum, error) {
+func (c *compileCtx) compileEnum(name string, elements map[string]*openapi.Schema) (*protobuf.Enum, error) {
 	var prefix bool
+	var enum string
+
 	if c.parent() != c.pkg || c.prefixEnums {
 		prefix = true
 	}
 
 	e := protobuf.NewEnum(camelCase(name))
-	for _, enum := range elements {
-		ename := enum
+
+	for propName, prop := range elements {
+
+		var buf bytes.Buffer
+		ename := propName
 		if prefix || looksLikeInteger(ename) {
 			ename = name + "_" + ename
 		}
-		ename = normalizeEnumName(ename)
 
-		e.AddElement(allCaps(ename))
+		description := strings.TrimSpace(prop.Description)
+
+		if len(description) > 0 {
+			buf.WriteString("// " + description)
+			buf.WriteString("\n")
+		}
+		buf.WriteString(allCaps(ename))
+		enum = buf.String()
+
+		e.AddElement(enum)
 	}
+
 	return e, nil
 }
 
@@ -859,46 +871,9 @@ func (c *compileCtx) compileProperty(name string, prop *openapi.Schema) (string,
 			if c.wrapPrimitives {
 				typ = c.getBoxedType(typ)
 			}
-		// case prop.Type.Contains("string"):
-		// 	if len(i.Enum) > 0 {
-		// 		var eName string
-		// 		// breaks on 'Class' :\
-		// 		if !strings.HasSuffix(name, "ss") {
-		// 			eName = strings.TrimSuffix(name, "s")
-		// 		} else {
-		// 			eName = name
-		// 		}
-
-		// 		eName = strings.Title(eName)
-
-		// 		if msgName != "" {
-		// 			eName = strings.Title(msgName) + "_" + eName
-		// 		}
-
-		// 		msgStr := ProtoEnum(eName, i.Enum, depth+1)
-		// 		if depth < 0 {
-		// 			return msgStr
-		// 		}
-		// 		return fmt.Sprintf("%s\n%s%s %s = %d", msgStr, indent(depth+1), eName, name, *index)
-		// 	}
-		// 	if err != nil {
-		// 		return "", nil, index, false, errors.Wrapf(err, `failed to compile array property %s`, name)
-		// 	}
 
 		default:
 			if len(prop.Enum) > 0 {
-				fmt.Println(prop.Enum)
-
-				// if len(s.Enum) > 0 {
-				// 	name = strings.TrimSuffix(name, "Message")
-				// 	t, err := c.compileEnum(name, s.Enum)
-				// 	if err != nil {
-				// 		return nil, errors.Wrap(err, `failed to compile enum field of the schema`)
-				// 	}
-				// 	c.addType(t)
-				// 	return t, nil
-				// }
-
 				p := c.parent()
 				enumName := p.Name() + "_" + name
 				typ, err = c.compileEnum(enumName, prop.Enum)

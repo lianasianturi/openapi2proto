@@ -79,17 +79,17 @@ type Path struct {
 // Parameter is a partial representation of OpenAPI parameter type
 // (https://swagger.io/specification/#parameterObject)
 type Parameter struct {
-	Name        string     `yaml:"name" json:"name"`
-	Description string     `yaml:"description" json:"description"`
-	Enum        []string   `yaml:"enum,omitempty" json:"enum,omitempty"`
-	Format      string     `yaml:"format,omitempty" json:"format,omitempty"`
-	In          string     `yaml:"in,omitempty" json:"in,omitempty"`
-	Items       *Schema    `yaml:"items,omitempty" json:"items,omitempty"`
-	ProtoTag    protoTag   `yaml:"x-proto-tag" json:"x-proto-tag"`
-	Ref         string     `yaml:"$ref" json:"$ref"`
-	Required    bool       `yaml:"required,omitempty" json:"required,omitempty"`
-	Schema      *Schema    `yaml:"schema,omitempty" json:"schema,omitempty"` // if in == "body", then schema is present
-	Type        SchemaType `yaml:"type,omitempty" json:"type,omitempty"`
+	Name        string             `yaml:"name" json:"name"`
+	Description string             `yaml:"description" json:"description"`
+	Enum        map[string]*Schema `yaml:"enum,omitempty" json:"enum,omitempty"`
+	Format      string             `yaml:"format,omitempty" json:"format,omitempty"`
+	In          string             `yaml:"in,omitempty" json:"in,omitempty"`
+	Items       *Schema            `yaml:"items,omitempty" json:"items,omitempty"`
+	ProtoTag    protoTag           `yaml:"x-proto-tag" json:"x-proto-tag"`
+	Ref         string             `yaml:"$ref" json:"$ref"`
+	Required    bool               `yaml:"required,omitempty" json:"required,omitempty"`
+	Schema      *Schema            `yaml:"schema,omitempty" json:"schema,omitempty"` // if in == "body", then schema is present
+	Type        SchemaType         `yaml:"type,omitempty" json:"type,omitempty"`
 }
 
 // Parameters is a slice of request parameters for a single endpoint.
@@ -138,9 +138,9 @@ type Schema struct {
 	Description string `yaml:"description,omitempty" json:"description,omitempty"`
 	// scalar
 	// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
-	Type   SchemaType `yaml:"type" json:"type"`
-	Format string     `yaml:"format,omitempty" json:"format,omitempty"`
-	Enum   []string   `yaml:"enum,omitempty" json:"enum,omitempty"`
+	Type   SchemaType         `yaml:"type" json:"type"`
+	Format string             `yaml:"format,omitempty" json:"format,omitempty"`
+	Enum   map[string]*Schema `yaml:"enum,omitempty" json:"enum,omitempty"`
 
 	ProtoName string   `yaml:"-" json:"-"`
 	ProtoTag  protoTag `yaml:"x-proto-tag" json:"x-proto-tag"`

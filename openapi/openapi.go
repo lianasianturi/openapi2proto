@@ -123,6 +123,7 @@ func LoadFile(fn string) (*Spec, error) {
 	// the data as a complete, self-contained spec. Bad data will be
 	// weeded out during the deserialization phase, and we know exactly
 	// what we are doing when we are traversing the openapi spec.
+
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(resolved); err != nil {
 		return nil, errors.Wrap(err, `failed to encode resolved schema`)
